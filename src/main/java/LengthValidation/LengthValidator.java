@@ -22,7 +22,7 @@ public class LengthValidator {
             reader = new BufferedReader(new FileReader(path));
             String line;
 
-            int lineCount = 0;
+            int lineCount = 1;
             do {
                 line = reader.readLine();
                 if (line != null) {
@@ -66,7 +66,7 @@ public class LengthValidator {
         }
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws LineLengthExceededException {
         String filePath = "";
         try {
             if(args.length > 0) {
@@ -96,6 +96,7 @@ public class LengthValidator {
             LengthValidator.listFilesForFolder(new File(filePath));
         } catch(Exception e){
             logger(e.getMessage());
+            throw e;
         }
     }
 }

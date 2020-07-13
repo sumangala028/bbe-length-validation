@@ -1,9 +1,7 @@
-import org.ajoberstar.grgit.*
 
 plugins {
     id 'java'
     id 'application'
-    id 'org.ajoberstar.grgit' version '1.7.2'
 }
 
 group 'FileLengthValidator'
@@ -22,20 +20,16 @@ dependencies {
 apply plugin: 'application'
 mainClassName = 'LengthValidation.LengthValidator'
 
-/*task clone {
-    File dir = new File("$buildDir/cloned-repo")
-    if(!dir.exists()) {
-        def grgit = Grgit.clone(dir: dir, uri: "git@github.com:ballerina-platform/ballerina-distribution", refToCheckout: "master")
-        println grgit.describe()
-    } else {
-        println "Repository already exist in the /build/git_repository. Skipping the repository clone"
-    }
 
-} */
-task call(type: Exec){
-    commandLine './repo_colne.sh'
+task cloneRepository(type: Exec){
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine 'cmd', '/c', './bin/repo_clone.sh'
+    } else {
+        commandLine 'sh', '-c', 'sh ./bin/repo_clone.sh'
+    }
 }
 
 run {
     args "$buildDir" + findProperty('filePath'), findProperty('debug') || false, findProperty('fileExtensions') ? findProperty('fileExtensions') : ""
 }
+
