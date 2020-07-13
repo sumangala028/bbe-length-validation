@@ -22,7 +22,7 @@ dependencies {
 apply plugin: 'application'
 mainClassName = 'LengthValidation.LengthValidator'
 
-task clone {
+/*task clone {
     File dir = new File("$buildDir/cloned-repo")
     if(!dir.exists()) {
         def grgit = Grgit.clone(dir: dir, uri: "git@github.com:ballerina-platform/ballerina-distribution", refToCheckout: "master")
@@ -31,6 +31,9 @@ task clone {
         println "Repository already exist in the /build/git_repository. Skipping the repository clone"
     }
 
+} */
+task call(type: Exec){
+    commandLine './repo_colne.sh'
 }
 
 run {
