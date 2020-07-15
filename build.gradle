@@ -21,11 +21,18 @@ apply plugin: 'application'
 mainClassName = 'LengthValidation.LengthValidator'
 
 
-task cloneRepository(type: Exec){
-    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-        commandLine 'cmd', '/c', './bin/repo_clone.sh'
+task cloneRepository(){
+    def folder = new File('./build/cloned-repo')
+    if( !folder.exists() ) {
+        exec {
+            if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+                commandLine 'cmd', '/c', './bin/repo_clone.sh'
+            } else {
+                commandLine 'sh', '-c', 'sh ./bin/repo_clone.sh'
+            }
+        }
     } else {
-        commandLine 'sh', '-c', 'sh ./bin/repo_clone.sh'
+        print "Repository folder is alrady exist in /build/cloned-repo. Skipping repository clone."
     }
 }
 
@@ -33,3 +40,12 @@ run {
     args "$buildDir" + findProperty('filePath'), findProperty('debug') || false, findProperty('fileExtensions') ? findProperty('fileExtensions') : ""
 }
 
+task finalize(type: JavaExec) {
+    group = "Execution"
+    classpath = sourceSets.main.runtimeClasspath
+    main = mainClassName
+    args "$buildDir" + findProperty('filePath'), findProperty('debug') || false, findProperty('fileExtensions') ? findProperty('fileExtensions') : ""
+}
+
+build.dependsOn cloneRepository
+build.finalizedBy(finalize)
